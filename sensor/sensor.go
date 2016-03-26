@@ -37,11 +37,11 @@ func main() {
 func calValue() {
 	var maxStep, minStep float64
 
-	if value < nominalValue {
+	if value < nom {
 		maxStep = *stepSize
-		minStep = -1 * *stepSize * (value - *min) / (nominalValue - *min)
+		minStep = -1 * *stepSize * (value - *min) / (nom - *min)
 	} else {
-		maxStep = *stepSize * (*max - value) / (*max - nominalValue)
+		maxStep = *stepSize * (*max - value) / (*max - nom)
 		minStep = -1 * *stepSize
 	}
 
