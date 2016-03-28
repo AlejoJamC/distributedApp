@@ -3,8 +3,9 @@ package qutils
 
 import (
 	"fmt"
-	"github.com/streadway/amqp"
 	"log"
+
+	"github.com/streadway/amqp"
 )
 
 func GetChannel(url string)( *amqp.Connection, *amqp.Channel) {
