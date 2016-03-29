@@ -16,7 +16,7 @@ import (
 
 // Location of the message broker's input listener
 // TODO: Move this location to an external file of configuration
-var url = "amqp://guest:guest@192.168.0.27:5672"
+var url = "amqp://guest:guest@192.168.0.27/uri"
 
 
 var freq = 		flag.Uint("freq", 5, "Updae frecuency in cycles/sec")
@@ -39,10 +39,19 @@ func main() {
 	defer ch.Close()
 
 	dataQueue := qutils.GetQueue(*name, ch)
+	sensorQueue := qutils.GetQueue(qutils.SensorListQueue, ch)
 
-	duration, _ := time.ParseDuration(strconv.Itoa(1000/int(*freq)) + "ms")
+	msg := amqp.Publishing{Body: []byte(*name)}
+	ch.Publish(
+		"", // exchange
+		sensorQueue.Name, // key
+		false, // mandatory
+		false, // immediate
+		msg) // msg amqp.Publishing
 
-	signal := time.Tick(duration)
+	dur, _ := time.ParseDuration(strconv.Itoa(1000/int(*freq)) + "ms") // duration
+
+	signal := time.Tick(dur)
 
 	buf := new(bytes.Buffer) // Buffer
 	enc := gob.NewEncoder(buf) // Encoder
